@@ -20,6 +20,7 @@ class AppTheme {
 
       // labels
       labelLarge: AppTypography.largeLabelStyle,
+      labelMedium: AppTypography.mediumLabelStyle,
 
     ),
 

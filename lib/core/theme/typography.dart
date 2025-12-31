@@ -14,6 +14,10 @@ class AppTypography {
     fontSize: 18,
     fontWeight: .bold
   );
+  static const TextStyle mediumLabelStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: .w400
+  );
 
 
   // bodies

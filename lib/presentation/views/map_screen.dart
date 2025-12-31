@@ -2,6 +2,7 @@ import 'package:boro/core/consts/colors.dart';
 import 'package:boro/core/consts/dimens.dart';
 import 'package:boro/core/helpers/widget_state_manager.dart';
 import 'package:boro/gen/assets.gen.dart';
+import 'package:boro/presentation/widgets/geo_points_info.dart';
 import 'package:boro/presentation/widgets/icon_buttons/back_arrow_button.dart';
 import 'package:boro/presentation/widgets/elevated_buttons/bottom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,13 @@ class _MapScreenState extends State<MapScreen> {
 
   GeoPoint? destinationPoint;
 
+  String distance = "درحال محاسبه فاصله ...";
+
+  bool showDistanceText = false;
+
   bool isMapReady = false;
+  
+  bool get showCenterPicker => currentWidgetList.last != CurrentWidgetState.stateRequestDriver;
 
   final MapController mapController = MapController(
     initPosition: GeoPoint(
@@ -56,6 +63,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -84,7 +92,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
       
           // ---------------- CENTER PICKER ICON ----------------
-          isMapReady == true
+          isMapReady == true && showCenterPicker == true
           ? Align(
             alignment: Alignment.center,
             child: IgnorePointer(
@@ -98,7 +106,7 @@ class _MapScreenState extends State<MapScreen> {
                         : Assets.svg.destination,
                     height: 70,
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -116,6 +124,15 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ) : const SizedBox.shrink(),
       
+          // ---------------- DISTANCE & ADDRESS ----------------
+          showDistanceText
+          ? Positioned(
+            left: AppDimens.mainScaffoldPadding,
+            right: AppDimens.mainScaffoldPadding,
+            bottom: AppDimens.mainScaffoldPadding * 5,
+            child: GeoPointsInformationCard(distance: distance)
+          ) : const SizedBox.shrink(),
+
           // ---------------- BOTTOM STATE ----------------
           isMapReady == true
           ? findCurrentWidgetState() : const SizedBox.shrink(),
@@ -124,12 +141,75 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  // calculate distance between origin & destination markers
+  Future<void> getDistance() async {
+
+    if (originPoint == null || destinationPoint == null) return;
+
+    await distance2point(originPoint!, destinationPoint!).then((value) {
+
+      setState(() {
+        
+        if (value <= 1000) {
+          
+          distance = "فاصله مبدا تا مقصد ${value.toInt()} متر";
+          showDistanceText = true;
+
+        } else {
+          
+          distance = "فاصله مبدا تا مقصد ${value ~/ 1000} کیلومتر";
+          showDistanceText = true;
+
+        }
+
+      });
+
+    });
+    
+
+  }
+
+  // Draw route between origin & destination markers
+  Future<void> drawRoute() async {
+
+    if (originPoint == null || destinationPoint == null) return;
+
+    await mapController.removeLastRoad();
+
+    await mapController.drawRoad(
+      originPoint!,
+      destinationPoint!,
+      roadType: RoadType.car,
+      roadOption: RoadOption(
+        roadColor: AppColors.primary,
+        roadBorderWidth: 20,
+        roadBorderColor: AppColors.primary,
+        zoomInto: true,
+      )
+    );
+
+  }
+
   // BACK BUTTON FUNCTION
   Future<void> onBackPressed() async {
     if (currentWidgetList.length <= 1) return;
 
     final removedState = currentWidgetList.removeLast();
 
+    // remove drawRoute for last origin & destination points
+    if (removedState == CurrentWidgetState.stateRequestDriver) {
+      await mapController.removeLastRoad();
+    }
+
+    // reset distance text for last origin & destination points
+    if (removedState == CurrentWidgetState.stateRequestDriver) {
+      setState(() {
+        showDistanceText = false;
+        distance = "درحال محاسبه فاصله ...";
+      });
+    }
+
+    // remove destination marker
     if (
         (removedState == CurrentWidgetState.stateSelectDestination ||
         removedState == CurrentWidgetState.stateRequestDriver) &&
@@ -139,6 +219,7 @@ class _MapScreenState extends State<MapScreen> {
       destinationPoint = null;
     }
 
+    // remove origin marker
     if (currentWidgetList.length == 1 &&
         currentWidgetList.first == CurrentWidgetState.stateSelectOrigin &&
         originPoint != null
@@ -211,11 +292,15 @@ class _MapScreenState extends State<MapScreen> {
             markerIcon: destinationMarker,
           );
 
+          await drawRoute();
+
           setState(() {
             currentWidgetList.add(
               CurrentWidgetState.stateRequestDriver,
             );
           });
+
+          await getDistance();
         },
       ),
     );
