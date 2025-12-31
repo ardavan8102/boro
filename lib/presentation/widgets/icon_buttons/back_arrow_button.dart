@@ -31,7 +31,7 @@ class BackArrowButton extends StatelessWidget {
               )
             ]
           ),
-          child: const Icon(Icons.arrow_back, color: Colors.white),
+          child: const Icon(Icons.arrow_forward, color: Colors.white),
         ),
       ),
     );
