@@ -10,4 +10,6 @@ class AppDimens {
 
   static const mainScaffoldPadding = 20.0;
 
+  static const mapMarkerSize = 150.0;
+
 }

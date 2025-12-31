@@ -12,11 +12,11 @@ class BackArrowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.primary,
       borderRadius: BorderRadius.circular(100),
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
-        splashColor: AppColors.primary.withValues(alpha: .7),
+        splashColor: Colors.white.withValues(alpha: .7),
         onTap: function,
         child: Container(
           height: 50,
@@ -31,7 +31,7 @@ class BackArrowButton extends StatelessWidget {
               )
             ]
           ),
-          child: const Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
     );
