@@ -22,14 +22,31 @@ class $AssetsImgGen {
   AssetGenImage get boroWhitebg =>
       const AssetGenImage('assets/img/boro_whitebg.png');
 
+  /// File path: assets/img/car.png
+  AssetGenImage get car => const AssetGenImage('assets/img/car.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [boroTransparent, boroWhitebg];
+  List<AssetGenImage> get values => [boroTransparent, boroWhitebg, car];
+}
+
+class $AssetsSvgGen {
+  const $AssetsSvgGen();
+
+  /// File path: assets/svg/destination.svg
+  String get destination => 'assets/svg/destination.svg';
+
+  /// File path: assets/svg/origin.svg
+  String get origin => 'assets/svg/origin.svg';
+
+  /// List of all assets
+  List<String> get values => [destination, origin];
 }
 
 class Assets {
   const Assets._();
 
   static const $AssetsImgGen img = $AssetsImgGen();
+  static const $AssetsSvgGen svg = $AssetsSvgGen();
 }
 
 class AssetGenImage {

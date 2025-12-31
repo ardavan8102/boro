@@ -1,4 +1,5 @@
-import 'package:boro/views/splash.dart';
+import 'package:boro/core/theme/app_theme.dart';
+import 'package:boro/presentation/views/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,9 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Boro App',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: AppTheme.mainTheme,
       home: const SplashScreen(),
     );
   }

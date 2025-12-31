@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:boro/core/consts/strings.dart';
 import 'package:boro/gen/assets.gen.dart';
-import 'package:boro/views/home_screen.dart';
+import 'package:boro/presentation/views/map_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 5),
       () {
         Navigator.of(context).pushReplacement(
-          CupertinoPageRoute(builder: (_) => const HomeScreen())
+          CupertinoPageRoute(builder: (_) => const MapScreen())
         );
       }
     );
@@ -40,6 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    var textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: SafeArea(
         child: AnimatedOpacity(
@@ -58,13 +62,15 @@ class _SplashScreenState extends State<SplashScreen> {
                 const SizedBox(height: 24),
                     
                 Text(
-                  'اپلیکیشن بُــرو',
+                  'اپلیکیشن ${AppStrings.brandNameFa}',
+                  style: textTheme.headlineLarge,
                 ),
 
                 const SizedBox(height: 12),
 
                 Text(
-                  'با بُــرو، رفتن دست خودته',
+                  'با ${AppStrings.brandNameFa} رفتن دست خودته',
+                  style: textTheme.bodyMedium,
                 ),
               ],
             ),
