@@ -1,6 +1,12 @@
+import 'package:boro/views/splash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(const MyApp());
 }
 
@@ -15,9 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Scaffold(
-        backgroundColor: Colors.red,
-      ),
+      home: const SplashScreen(),
     );
   }
 }
