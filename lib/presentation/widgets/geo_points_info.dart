@@ -4,13 +4,9 @@ class GeoPointsInformationCard extends StatelessWidget {
   const GeoPointsInformationCard({
     super.key,
     required this.distance,
-    required this.originAddress,
-    required this.destinationAddress,
   });
 
   final String distance;
-  final String originAddress;
-  final String destinationAddress;
 
   @override
   Widget build(BuildContext context) {
@@ -26,25 +22,11 @@ class GeoPointsInformationCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: .circular(12)
       ),
-      child: Column(
-        crossAxisAlignment: .start,
-        mainAxisAlignment: .center,
-        children: [
-          Text(
-            distance,
-            style: textTheme.labelMedium,
-          ),
-
-          Text(
-            originAddress,
-            style: textTheme.labelMedium,
-          ),
-
-          Text(
-            destinationAddress,
-            style: textTheme.labelMedium,
-          ),
-        ],
+      child: Center(
+        child: Text(
+          distance,
+          style: textTheme.labelMedium,
+        ),
       ),
     );
   }

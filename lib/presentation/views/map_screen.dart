@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geocoding/geocoding.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -26,10 +25,6 @@ class _MapScreenState extends State<MapScreen> {
   GeoPoint? destinationPoint;
 
   String distance = "درحال محاسبه فاصله ...";
-  
-  String destinationAddress = "";
-
-  String originAddress = "";
 
   bool showDistanceText = false;
 
@@ -129,7 +124,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ) : const SizedBox.shrink(),
       
-          // ---------------- DISTANCE & ADDRESS ----------------
+          // ---------------- DISTANCE ----------------
           showDistanceText
           ? Positioned(
             left: AppDimens.mainScaffoldPadding,
@@ -137,8 +132,6 @@ class _MapScreenState extends State<MapScreen> {
             bottom: AppDimens.mainScaffoldPadding * 5,
             child: GeoPointsInformationCard(
               distance: distance,
-              originAddress : originAddress,
-              destinationAddress : destinationAddress,
             )
           ) : const SizedBox.shrink(),
 
@@ -309,8 +302,6 @@ class _MapScreenState extends State<MapScreen> {
 
           await getDistance();
 
-          await getAddress();
-
           setState(() {
             showDistanceText = true;
           });
@@ -335,46 +326,4 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // Get origin & destination's address
-  Future<void> getAddress() async {
-
-    if (originPoint == null || destinationPoint == null) return;
-
-    await setLocaleIdentifier('fa_IR'); // --> change output language for placemarks
-
-    try {
-
-      // origin address
-      await placemarkFromCoordinates(
-        originPoint!.latitude,
-        originPoint!.longitude
-      ).then((List<Placemark> placemarks) {
-
-          setState(() {
-            originAddress = "${placemarks.first.locality}، ${placemarks.first.thoroughfare}، ${placemarks[2].name} ";
-          });
-
-      });
-
-      // destination address
-      await placemarkFromCoordinates(
-        destinationPoint!.latitude,
-        destinationPoint!.longitude
-      ).then((List<Placemark> placemarks) {
-
-          setState(() {
-            destinationAddress = "${placemarks.first.locality} ${placemarks.first.thoroughfare} ${placemarks[2].name}";
-          });
-
-      });
-
-    } catch (e) {
-
-      originAddress = "آدرس یافت نشد";
-      destinationAddress = "آدرس یافت نشد";
-      throw Exception('error in getting address : $e');
-
-    }
-
-  }
 }
