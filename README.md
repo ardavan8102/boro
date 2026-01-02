@@ -4,6 +4,6 @@
 
 ## Features
 
-> auto-zoom when choosing destination point
-> calculate distance between points
-> draw road line between points
+> auto-zoom when choosing destination point<br>
+> calculate distance between points<br>
+> draw road line between points<br>
